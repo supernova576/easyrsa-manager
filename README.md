@@ -1,6 +1,6 @@
 # easyrsa-manager
 
-Detailed helper for generating and managing server certificates using Easy-RSA.
+Detailed helper for generating and managing server certificates using Easy-RSA by Openvpn.
 
 This repository contains `ynsjk_easyrsa.sh`, an interactive Bash script that:
 
@@ -19,18 +19,12 @@ This repository contains `ynsjk_easyrsa.sh`, an interactive Bash script that:
 
 **Prerequisites**
 - `bash` (script is a Bash script)
-- Easy-RSA CLI accessible as `easyrsa` (script invokes `bash easyrsa ...`)
+- Easy-RSA CLI accessible as `easyrsa` (script invokes `bash easyrsa ...`) (has to be in the same directory!!)
 - `sshpass` (only required if you use the remote `scp` option)
 - `openssl` (used to inspect certificate expiry dates)
+- already setup and initialized PKI using easyrsa
 
-Install tools on Debian/Ubuntu, for example:
-
-```bash
-sudo apt update
-sudo apt install easy-rsa sshpass openssl -y
-```
-
-Adjust package names for your distribution as needed.
+To install easyrsa, clone the official github repo: [easyrsa repo](https://github.com/OpenVPN/easy-rsa)
 
 Configuration (`script.conf`)
 The script reads several values from `script.conf` in the current directory. Provide at minimum the following keys (simple whitespace-separated key/value pairs):
@@ -98,22 +92,8 @@ Security notes and best practices
 - Avoid using `sshpass` and plaintext passwords for production systems. Configure SSH key-based auth for the remote host and use `scp`/`rsync` without `sshpass`.
 - Keep private keys secure. Restrict filesystem permissions on `pki/private` and any destination directories.
 - The script uses Easy-RSA commands with `nopass` (no passphrase on the key) for convenience. For higher security, use passphrases and protect keys appropriately.
-- Ensure `script.conf` permissions are restrictive if it contains sensitive destination information.
 
-Troubleshooting
----------------
-- "Command not found: easyrsa": install Easy-RSA and ensure the `easyrsa` wrapper is in PATH or run from the directory that contains the `easyrsa` script.
-- `scp`/`sshpass` errors: verify network connectivity, `scp_user`, `scp_dest_dir`, and that `sshpass` is installed. Prefer SSH keys.
-- Certificate generation fails: check that `pki/` exists and Easy-RSA is initialized (`easyrsa init-pki`, and CA is present).
-
-Extending or modifying
-----------------------
-- Replace password-based remote copy with an SSH-key-based flow: remove `sshpass` usage and rely on `scp` or `rsync` over SSH keys.
-- Add input validation and stricter error handling for user inputs (e.g., check SAN format, ensure valid number for days).
 
 Contact / Contributing
 ----------------------
 If you want improvements or fixes, open an issue or send a pull request. Be sure to include reproducible steps and any relevant `easyrsa_ynsjk.log` excerpts.
-
----
-Generated README for `ynsjk_easyrsa.sh` (interactive Easy-RSA helper).
